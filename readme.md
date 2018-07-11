@@ -8,7 +8,7 @@
 
 1. Copy `.env.example` to `.env` and adjust variable values.
 2. Generate **Firebase admin credentials file** and place on the project root as **`service-account.json`**.
-3. Create **`.firebaserc`** on the project root folder, changing the Firebase project name as on the following
+3. [deployment only] Create **`.firebaserc`** on the project root folder, changing the Firebase project name as on the following
 example:
 
 ```js
@@ -41,15 +41,34 @@ npm run build:firebase
 npm run dev
 ```
 
-### Deployment.
+### Deployment - Firebase.
 
-For deployment on Firebase, it's required to configure the project name, that can be done by
-creating a file **`.firebaserc`** on the root folder.
+> For firebase deployments, the firebase sdk must be installed globally:
 
 ```
-{
-  "projects": {
-    "default": "utopian-io"
-  }
-}
+npm install -g firebase-tools
+```
+
+> Then, login with valid credentials
+
+```
+firebase login
+```
+
+> And finally, deploy.
+
+```
+firebase deploy --only functions
+```
+
+### Deployment - Express.
+
+```
+npm run start
+```
+
+// OR
+
+```
+node ./bin/www
 ```
