@@ -8,6 +8,16 @@
 
 1. Copy `.env.example` to `.env` and adjust variable values.
 2. Generate **Firebase admin credentials file** and place on the project root as **`service-account.json`**.
+3. Create **`.firebaserc`** on the project root folder, changing the Firebase project name as on the following
+example:
+
+```js
+{
+  "projects": {
+    "default": "utopian-io"
+  }
+}
+```
 
 ### Building:
 
