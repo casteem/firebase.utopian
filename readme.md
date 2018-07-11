@@ -31,4 +31,15 @@ npm run build:firebase
 npm run dev
 ```
 
-// include deploy.
+### Deployment.
+
+For deployment on Firebase, it's required to configure the project name, that can be done by
+creating a file **`.firebaserc`** on the root folder.
+
+```
+{
+  "projects": {
+    "default": "utopian-io"
+  }
+}
+```
