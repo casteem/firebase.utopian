@@ -4,6 +4,7 @@ import { GithubClient } from 'src/support/github/client'
 import { Account } from 'src/domains/users/account'
 // lodash helpers.
 import { get } from 'lodash'
+// custom https errors.
 import { HttpsError } from 'src/support/firebase/functions/handler/errors'
 
 /**
