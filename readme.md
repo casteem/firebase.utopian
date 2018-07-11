@@ -2,11 +2,29 @@
 
 ### Quick instructions:
 
-1. Copy .env.example to .env and adjust variables.
-2. Generate a Firebase admin credentials file and place on the project root, with name `'service-account.json'`
+1. Copy `.env.example` to `.env` and adjust variable values.
+2. Generate **Firebase admin credentials file** and place on the project root as **`'service-account.json'`**.
 
 ### Building:
 
-npm run build:server
-npm run build:firebase
+> Build for server usage (HTTPS server outside firebase).
 
+```
+npm run build:server
+```
+
+> Build for firebase deployment.
+
+```
+npm run build:firebase
+```
+
+### Development
+
+> Run development server:
+
+```
+npm run dev
+```
+
+// include deploy.
