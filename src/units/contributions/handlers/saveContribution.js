@@ -1,11 +1,11 @@
-// import github client.
-import { GithubClient } from 'src/support/github/client'
 // import account model.
-import { Account } from 'src/domains/users/account'
+// import { Account } from 'src/domains/users/account'
 // lodash helpers.
 import { get } from 'lodash'
 // custom https errors.
 import { HttpsError } from 'src/support/firebase/functions/handler/errors'
+// import steem client.
+import steem from 'steem'
 
 /**
  * Handle Github token validation.
@@ -16,10 +16,10 @@ import { HttpsError } from 'src/support/firebase/functions/handler/errors'
  */
 export const handler = async (data, context) => {
   // get current user UID from required.
-  const uid = get(context, 'auth.uid', null)
+  const author = get(context, 'auth.uid', null)
 
   // throw when not authenticated.
-  if (!uid) {
+  if (!author) {
     return Promise.reject(new HttpsError(
       'unauthenticated',
       'Authentication is required for storing contributions.'
@@ -37,6 +37,12 @@ export const handler = async (data, context) => {
     ))
   }
 
+  // get post from blockchain
+  const post = steem.api.getContent(author, permlink)
+
+  // resolve.
+  return Promise.resolve(post)
+
   // resolve with the account data itself.
-  return Promise.resolve({ message: 'SUCCESS' })
+  // return Promise.resolve({ message: 'SUCCESS' })
 }
