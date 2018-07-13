@@ -1,5 +1,5 @@
 // import account model.
-// import { Account } from 'src/domains/users/account'
+import { Contribution } from 'src/domains/contributions/contribution'
 // lodash helpers.
 import { get } from 'lodash'
 // custom https errors.
@@ -38,11 +38,11 @@ export const handler = async (data, context) => {
   }
 
   // get post from blockchain
-  const post = steem.api.getContent(author, permlink)
-
-  // resolve.
-  return Promise.resolve(post)
-
-  // resolve with the account data itself.
-  // return Promise.resolve({ message: 'SUCCESS' })
+  return steem.api.getContentAsync(author, permlink)
+    // generate the contribution model data.
+    .then(content => new Contribution(content))
+    // save on firestore.
+    .then(contribution => contribution.save())
+    // send the contribution model back with a success message.
+    .then(contribution => ({ contribution, message: 'SUCCESS' }))
 }
