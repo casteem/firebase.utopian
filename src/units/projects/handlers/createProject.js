@@ -24,10 +24,9 @@ export const handler = async (data, context) => {
     ))
   }
 
-  // get post from blockchain
-  return data => new Project(data)
-    // save on firestore.
-    .then(project => project.save())
-    // send the project model back with a success message.
+  const project = new Project(data)
+  // save on firestore.
+  return project.save()
+  // send the project model back with a success message.
     .then(project => ({ project, message: 'SUCCESS' }))
 }
