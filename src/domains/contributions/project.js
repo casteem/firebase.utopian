@@ -45,8 +45,10 @@ export class Project extends Model {
       id: null, // auto generated
       name: null, // project name.
       description: null, // project description (short).
-      readme: null, // long description / readme.
       creator: null, // primary owner / creator of the project.
+      image: null, // project image
+      detail: null, // project detail
+      tags: null, // project detail
       blacklisted: false, // when blacklisted, no submissions should be made.
       paused: false, // owners paused / suspended contributions by a given reason.
       compliant: true, // does the project meets all criteria to be on utopian?.
