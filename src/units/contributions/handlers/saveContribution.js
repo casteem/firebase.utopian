@@ -42,6 +42,7 @@ export const handler = async (data, context) => {
     // generate the contribution model data.
     .then(content => {
       const contribution = new Contribution(content)
+      console.log(contribution)
       return contribution.save().then(() => contribution)
     })
     // save on firestore.

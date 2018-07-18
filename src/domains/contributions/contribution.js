@@ -1,7 +1,30 @@
 // import helpers.
-import { get, toString } from 'lodash'
+import { get, toString, assign, attempt, isError, toPlainObject } from 'lodash'
 // import base model to extend.
 import { Model } from 'src/support/domains/model'
+
+/**
+ * Parse / normalize contribution data.
+ *
+ * @param contributionData
+ * @return {*}
+ */
+const parseContribution = (contributionData) => {
+  // start a local data variable.
+  const data = assign({}, contributionData)
+  // parse metadata.
+  const meta = JSON.parse(get(data, 'json_metadata', {}))
+
+  // parse tags.
+  data['tags'] = toPlainObject(get(meta, 'tags', {}))
+  // parse project ID.
+  data['projectId'] = get(meta, 'projectId', null)
+  // parse category.
+  data['category'] = get(meta, 'category', null)
+  console.log(data)
+  // return data.
+  return data
+}
 
 /**
  * Model class definition.
@@ -14,7 +37,7 @@ export class Contribution extends Model {
    */
   constructor (data = {}) {
     // call parent constructor.
-    super(data)
+    super(parseContribution(data))
   }
 
   /**
@@ -47,12 +70,14 @@ export class Contribution extends Model {
       author: null, // steem author id.
       except: null, // optional except for small spaces descriptions.
       permlink: null, // steem permlink / slug.
+      category: null, // contribution category.
       accountId: null, // internal account id reference.
       projectId: null, // internal project id reference.
       body: null, // markdown body.
       html: null, // parsed markdown body (pre-render),
-      beneficiaryPercent: 0.15, // value of the beneficiary reward percent for utopian.
-      tags: [], // list of tags on the contribution.
+      beneficiaries: {}, // beneficaries.
+      tags: {}, // list of tags on the contribution.
+      url: null, // contribution URL.
       createdAt: null, // create date.
       updatedAt: null, // update date.
       deletedAt: null // delete date (soft deletes, keep the record but hidden).

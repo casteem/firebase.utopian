@@ -1,5 +1,5 @@
 // imports.
-import { get, isObject, assign, mapValues, isNil, toString, isEmpty, omitBy } from 'lodash'
+import { get, isObject, isArray, assign, mapValues, isNil, toString, isEmpty, omitBy, toPlainObject } from 'lodash'
 import * as admin from 'firebase-admin'
 
 /**
