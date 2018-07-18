@@ -1,5 +1,5 @@
 // imports.
-import { get, isObject, assign, mapValues, isNil, isEmpty, omitBy } from 'lodash'
+import { get, isObject, assign, mapValues, isNil, toString, isEmpty, omitBy } from 'lodash'
 import * as admin from 'firebase-admin'
 
 /**
@@ -39,7 +39,7 @@ export class Model {
    * @return {string|number|null}
    */
   getPrimary () {
-    return get(this, 'id', null)
+    return toString(get(this, 'id', null))
   }
 
   /**
