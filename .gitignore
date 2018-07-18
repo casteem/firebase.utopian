@@ -3,6 +3,7 @@
 /functions
 /dist
 /service-account.json
+/.runtimeconfig.json
 /web-config.json
 /.env
 /*.log
