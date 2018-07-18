@@ -55,6 +55,8 @@ const makeConfig = ({ name, entryFile, outputPath, mode = 'production', target =
     name: name,
     // mode (production / dev)
     mode: mode || 'production',
+    // sourcemap
+    devtool: mode === 'development' ? 'eval-source-map' : 'source-map',
     // target.
     target: target,
     // entry points.
