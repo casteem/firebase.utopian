@@ -39,7 +39,7 @@ export class Model {
    * @return {string|number|null}
    */
   getPrimary () {
-    return toString(get(this, 'id', null))
+    return get(this, 'id', null)
   }
 
   /**
@@ -49,7 +49,7 @@ export class Model {
    */
   save (options = { merge: true }) {
     // creates a document reference.
-    const reference = this.getCollection().doc(this.getPrimary())
+    const reference = this.getCollection().doc(toString(this.getPrimary()))
     // serialize-safe data.
     const data = this.prepareData(this)
 
