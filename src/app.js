@@ -15,5 +15,8 @@ const prefix = (process.env.APP_MODE === 'server') ? '/api' : ''
 // enable the main http kernel on the express app instance.
 app.use(prefix, httpKernel)
 
+// emulator only route prefix.
+app.use('/utopian-io/us-central1' + prefix, httpKernel)
+
 // exports the express application.
 module.exports = app
