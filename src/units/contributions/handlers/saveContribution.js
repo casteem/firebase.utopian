@@ -27,7 +27,7 @@ export const handler = async (data, context) => {
   }
 
   // get permlink.
-  const permlink = get(data, 'permlink', null)
+  const permlink = get(data, 'contribution.permlink', null)
 
   // reject if no token present.
   if (!permlink) {
@@ -36,13 +36,16 @@ export const handler = async (data, context) => {
       'Invalid permlink.'
     ))
   }
-
+  // return Promise.resolve(permlink)
   // get post from blockchain
   return steem.api.getContentAsync(author, permlink)
     // generate the contribution model data.
-    .then(content => new Contribution(content))
+    .then(content => {
+      const contribution = new Contribution(content)
+      return contribution.save().then(() => contribution)
+    })
     // save on firestore.
-    .then(contribution => contribution.save())
+    //.then(contribution => contribution.save())
     // send the contribution model back with a success message.
-    .then(contribution => ({ contribution, message: 'SUCCESS' }))
+    // .then(contribution => ({ contribution, message: 'SUCCESS' }))
 }

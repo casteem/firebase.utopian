@@ -1,5 +1,5 @@
 // import helpers.
-import { get } from 'lodash'
+import { get, toString } from 'lodash'
 // import base model to extend.
 import { Model } from 'src/support/domains/model'
 
@@ -18,12 +18,12 @@ export class Contribution extends Model {
   }
 
   /**
-   * Primary key / document reference value.
+   * Primary key / doc reference field.
    *
    * @return {string|number|null}
    */
   getPrimary () {
-    return get(this, 'id', null)
+    return toString(get(this, 'id', null))
   }
 
   /**
