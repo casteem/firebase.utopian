@@ -40,13 +40,9 @@ export const handler = async (data, context) => {
   // get post from blockchain
   return steem.api.getContentAsync(author, permlink)
     // generate the contribution model data.
-    .then(content => {
-      const contribution = new Contribution(content)
-      console.log(contribution)
-      return contribution.save().then(() => contribution)
-    })
+    .then(content => new Contribution(content))
     // save on firestore.
-    //.then(contribution => contribution.save())
+    .then(contribution => contribution.save())
     // send the contribution model back with a success message.
-    // .then(contribution => ({ contribution, message: 'SUCCESS' }))
+    .then(contribution => ({ contribution, message: 'SUCCESS' }))
 }
