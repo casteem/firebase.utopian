@@ -13,7 +13,6 @@ import { HttpsError } from 'src/support/firebase/functions/handler/errors'
  */
 export const handler = async (data, context) => {
   // get current user UID from required.
-  console.log(data, context)
   const author = get(context, 'auth.uid', null)
 
   // throw when not authenticated.
@@ -21,6 +20,13 @@ export const handler = async (data, context) => {
     return Promise.reject(new HttpsError(
       'unauthenticated',
       'Authentication is required for creating projects.'
+    ))
+  }
+
+  if (!data.image || !data.description || !data.name || !data.creator || !data.tags || !data.github || !data.slug || !data.id) {
+    return Promise.reject(new HttpsError(
+      'failed-precondition',
+      'Not Proper Arguments Provided.'
     ))
   }
 
