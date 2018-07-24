@@ -50,10 +50,8 @@ export class Project extends Model {
       detail: null, // project detail
       tags: null, // project detail
       blacklisted: false, // when blacklisted, no submissions should be made.
-      paused: false, // owners paused / suspended contributions by a given reason.
-      compliant: true, // does the project meets all criteria to be on utopian?.
       openSource: null, // is project open source or not?.
-      platform: null, // on which platform is the project
+      platforms: null, // on which platform is the project
       slug: null, // project slug (preferable to use github vendor/repo for slug).
       website: null, // project website.
       docs: null, // project documentation URL.

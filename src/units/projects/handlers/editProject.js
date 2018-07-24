@@ -19,7 +19,7 @@ export const handler = async (data, context) => {
   if (!author) {
     return Promise.reject(new HttpsError(
       'unauthenticated',
-      'Authentication is required for creating projects.'
+      'Authentication is required for editing projects.'
     ))
   }
 
@@ -32,7 +32,7 @@ export const handler = async (data, context) => {
 
   const project = new Project(data)
   // save on firestore.
-  return project.save()
+  return project.update()
   // send the project model back with a success message.
     .then(project => ({ project, message: 'SUCCESS' }))
 }
