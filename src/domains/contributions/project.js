@@ -46,8 +46,8 @@ export class Project extends Model {
       name: null, // project name.
       description: null, // project description (short).
       creator: null, // primary owner / creator of the project.
-      image: null, // project image
-      detail: null, // project detail
+      images: null, // project image
+      details: null, // project detail
       tags: null, // project detail
       blacklisted: false, // when blacklisted, no submissions should be made.
       openSource: null, // is project open source or not?.

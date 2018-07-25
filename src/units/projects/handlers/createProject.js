@@ -23,7 +23,7 @@ export const handler = async (data, context) => {
     ))
   }
 
-  if (!data.image || !data.description || !data.name || !data.creator || !data.tags || !((data.openSource && data.platforms) || !data.openSource) || !data.slug || !data.id) {
+  if (!data.images || !data.description || !data.name || !data.creator || !data.tags || !((data.openSource && data.platforms) || !data.openSource) || !data.slug || !data.id) {
     return Promise.reject(new HttpsError(
       'failed-precondition',
       'Not Proper Arguments Provided.'
