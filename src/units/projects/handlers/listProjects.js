@@ -14,22 +14,39 @@ export const handler = async (data, context) => {
   const project = new Project()
 
   let query = context.rawRequest.query.q
-
+  let openSource = context.rawRequest.query.opensource
+  console.log('openSource', openSource)
+  if (typeof openSource === 'undefined') {
+    openSource = 'true'
+  }
   let docs = []
-
   await project.getCollection().get()
     .then(snapshot => {
       console.log(snapshot)
       snapshot.forEach(doc => {
-        docs.push({id: doc.id, data: doc.data().name})
+        docs.push({id: doc.id, data: doc.data()})
       })
     })
 
-  console.log(docs)
+  docs = docs.filter((doc) => {
+    return !(doc.data.blacklisted || doc.data.status === 'deleted')
+  })
 
   if (query) {
     const match = new RegExp(query, 'i')
-    docs = docs.filter((doc) => match.test(doc.data))
+    docs = docs.filter((doc) => match.test(doc.data.name))
+  }
+  switch (openSource) {
+    case 'any':
+      break
+    case 'true':
+      docs = docs.filter((doc) => doc.data.openSource)
+      break
+    case 'false':
+      docs = docs.filter((doc) => !doc.data.openSource)
+      break
+    default:
+      break
   }
 
   return docs
