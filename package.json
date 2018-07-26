@@ -17,6 +17,7 @@
     "lint": "eslint src"
   },
   "dependencies": {
+    "@octokit/rest": "^15.9.4",
     "axios": "^0.18.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
