@@ -45,6 +45,7 @@ export class Project extends Model {
       id: null, // auto generated
       name: null, // project name.
       description: null, // project description (short).
+      featured: null, // should project be featured in homepage
       creator: null, // primary owner / creator of the project.
       images: null, // project image
       details: null, // project detail
