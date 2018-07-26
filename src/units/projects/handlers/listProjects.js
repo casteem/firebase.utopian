@@ -15,6 +15,8 @@ export const handler = async (data, context) => {
 
   let query = context.rawRequest.query.q
   let openSource = context.rawRequest.query.opensource
+  let featured = context.rawRequest.query.featured
+  console.log(featured)
   console.log('openSource', openSource)
   if (typeof openSource === 'undefined') {
     openSource = 'true'
@@ -36,6 +38,15 @@ export const handler = async (data, context) => {
     const match = new RegExp(query, 'i')
     docs = docs.filter((doc) => match.test(doc.id))
   }
+
+  if (!(typeof featured === 'undefined')) {
+    if (featured === 'true') {
+      docs = docs.filter((doc) => doc.data.featured === true)
+    } else if (featured === 'false') {
+      docs = docs.filter((doc) => !doc.data.featured === true)
+    }
+  }
+
   switch (openSource) {
     case 'any':
       break
