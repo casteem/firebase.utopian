@@ -34,7 +34,7 @@ export const handler = async (data, context) => {
 
   if (query) {
     const match = new RegExp(query, 'i')
-    docs = docs.filter((doc) => match.test(doc.data.name))
+    docs = docs.filter((doc) => match.test(doc.id))
   }
   switch (openSource) {
     case 'any':
