@@ -6,8 +6,8 @@ import { Account } from 'src/domains/users/account'
 import { get } from 'lodash'
 // custom https errors.
 import { HttpsError } from 'src/support/firebase/functions/handler/errors'
-
-const octokit = require('@octokit/rest')()
+// import axios to make http requests
+import axios from 'axios'
 
 /**
  *
@@ -39,39 +39,37 @@ export const handler = async (data, context) => {
       })
     })
 
-  console.log(docs)
   const match = new RegExp(data.creator, 'i')
   docs = docs.filter((doc) => match.test(doc.id))
-  console.log(docs)
   const username = docs[0].data.github.username
   console.log(username)
 
   if (data.openSource && data.platforms && data.platforms.github.token) {
     const token = data.platforms.github.token
     console.log(token)
-    await octokit.authenticate({
-      type: 'token',
-      token
-    })
     const splittedGithubRepository = data.platforms.github.repository.split('/')
     const repo = splittedGithubRepository.pop()
     const owner = splittedGithubRepository.pop()
-    let result
-    try {
-      result = (await octokit.repos.reviewUserPermissionLevel({ owner, repo, username })).data.permission
-    } catch (err) {
-      result = false
-    }
+    let result = false
+    await axios.get(`https://api.github.com/repos/${owner}/${repo}/collaborators/${username}/permission?access_token=${token}`)
+      .then((response) => {
+        result = response.data.permission === 'admin'
+      })
+      .catch(err => {
+        console.log(err)
+        result = false
+      })
+    delete data.platforms.github.token
 
-    if (!(result === 'admin')) {
+    console.log('result', result)
+
+    if (!(result)) {
       return Promise.reject(new HttpsError(
         'permission-denied',
         `You don't have permission for performing following operation.`
       ))
     }
-    delete data.platforms.github.token
   }
-  console.log(data)
   if (!data.images || !data.description || !data.name || !data.creator || !data.tags || !((data.openSource && data.platforms) || !data.openSource) || !data.slug || !data.id) {
     return Promise.reject(new HttpsError(
       'failed-precondition',
