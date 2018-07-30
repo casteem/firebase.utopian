@@ -3,5 +3,5 @@ import { handler } from '../handlers/listProjects'
 export default {
   handler,
   path: '/list',
-  methods: ['get']
+  methods: ['post']
 }
