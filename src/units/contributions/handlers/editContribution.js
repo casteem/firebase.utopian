@@ -26,7 +26,7 @@ export const handler = async (data, context) => {
 
   const contribution = new Contribution(data)
 
-  return contribution.save()
+  return contribution.update()
     // send the contribution model back with a success message.
     .then(contribution => ({ contribution, message: 'SUCCESS' }))
 }
