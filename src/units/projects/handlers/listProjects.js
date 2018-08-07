@@ -12,13 +12,9 @@ const client = new elasticsearch.Client({host: elasticsearchconf.host, log: 'tra
  * @return {Promise<Object>}
  */
 export const handler = async (data, context) => {
-  console.log('context', context)
-  console.log('data', data)
   let query = (context.rawRequest.query.q).toLowerCase()
   let openSource = context.rawRequest.query.opensource
   let featured = context.rawRequest.query.featured
-  console.log(featured)
-  console.log('openSource', openSource)
   if (typeof openSource === 'undefined' || openSource === 'any' || openSource === 'true') {
     openSource = true
   } else {
