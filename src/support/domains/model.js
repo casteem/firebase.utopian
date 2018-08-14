@@ -1,5 +1,4 @@
-// imports.
-import { get, isObject, isArray, assign, mapValues, isNil, toString, isEmpty, omitBy, toPlainObject } from 'lodash'
+import { get, isObject, assign, mapValues, toString, isEmpty, omitBy } from 'lodash'
 import * as admin from 'firebase-admin'
 
 /**
@@ -48,12 +47,9 @@ export class Model {
    * @return {Promise<FirebaseFirestore.WriteResult>}
    */
   save (options = { merge: true }) {
-    // creates a document reference.
     const reference = this.getCollection().doc(toString(this.getPrimary()))
-    // serialize-safe data.
     const data = this.prepareData(this)
-
-    // save the data, merging fields non-matching.
+    data.createdAt = new Date()
     return reference.set(data, options)
   }
 
@@ -68,6 +64,7 @@ export class Model {
 
     // serialize-safe data.
     const data = this.prepareData(this.omitNil(this))
+    data.updatedAt = new Date()
     // save the data, merging fields non-matching.
     return reference.set(data, options)
   }
