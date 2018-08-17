@@ -49,7 +49,7 @@ export class Model {
   save (options = { merge: true }) {
     const reference = this.getCollection().doc(toString(this.getPrimary()))
     const data = this.prepareData(this)
-    data.createdAt = new Date()
+    data.createdAt = Date.now()
     return reference.set(data, options)
   }
 
@@ -64,9 +64,17 @@ export class Model {
 
     // serialize-safe data.
     const data = this.prepareData(this.omitNil(this))
-    data.updatedAt = new Date()
+    data.updatedAt = Date.now()
     // save the data, merging fields non-matching.
     return reference.set(data, options)
+  }
+
+  async findById () {
+    const ref = await this.getCollection().doc(this.getPrimary())
+    if (ref.exists) {
+      return ref.data()
+    }
+    return null
   }
 
   /**

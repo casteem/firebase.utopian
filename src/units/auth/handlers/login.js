@@ -1,23 +1,12 @@
-import * as admin from 'firebase-admin'
-import { GithubClient } from 'src/support/github/client'
-
+import { omit } from 'lodash'
 import { Account } from 'src/domains/users/account'
+
 export const handler = async (data) => {
-  const githubClient = new GithubClient(data.accessToken)
-  const githubAccount = await githubClient.getAccount()
-  const account = new Account(githubAccount)
-  try {
-    await admin.auth().getUser(account.name)
-  } catch (err) {
-    if (err.code === 'auth/user-not-found') {
-      await admin.auth().createUser(account.getFirebaseUser())
-      await account.save()
-    }
+  const account = new Account(data)
+  let accountRef = await account.findById()
+  if (!accountRef) {
+    await account.save()
+    accountRef = account
   }
-  // admin.auth().createCustomToken(account.name)
-  return {
-    avatar: account.avatar,
-    name: account.name,
-    displayName: account.displayName
-  }
+  return omit(accountRef, ['createdAt', 'deletedAt', 'updatedAt'])
 }
