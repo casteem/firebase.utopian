@@ -16,7 +16,7 @@ const prefix = (process.env.APP_MODE === 'server') ? '/api' : ''
 app.use(prefix, httpKernel)
 
 // emulator only route prefix.
-app.use('/develop-utopian-io/us-central1' + prefix, httpKernel)
+app.use(`/${process.env.NODE_ENV === 'development' ? 'develop-' : ''}utopian-io/us-central1${prefix}`, httpKernel)
 
 // exports the express application.
 module.exports = app

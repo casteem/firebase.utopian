@@ -1,5 +1,9 @@
-// import project model.
-import { Project } from 'src/domains/contributions/project'
+import * as functions from 'firebase-functions'
+// import elasticsearch and initialize it with config
+const elasticsearchconf = functions.config().elasticsearch
+
+const elasticsearch = require('elasticsearch')
+const client = new elasticsearch.Client({host: elasticsearchconf.host, log: 'trace', httpAuth: elasticsearchconf.auth})
 
 /**
  *
@@ -8,59 +12,64 @@ import { Project } from 'src/domains/contributions/project'
  * @return {Promise<Object>}
  */
 export const handler = async (data, context) => {
-  console.log('context', context)
-  console.log('data', data)
-
-  const project = new Project()
-
-  let query = context.rawRequest.query.q
+  let query = (context.rawRequest.query.q).toLowerCase()
   let openSource = context.rawRequest.query.opensource
   let featured = context.rawRequest.query.featured
-  console.log(featured)
-  console.log('openSource', openSource)
-  if (typeof openSource === 'undefined') {
-    openSource = 'true'
+  if (typeof openSource === 'undefined' || openSource === 'any' || openSource === 'true') {
+    openSource = true
+  } else {
+    openSource = false
   }
-  let docs = []
-  await project.getCollection().get()
-    .then(snapshot => {
-      console.log(snapshot)
-      snapshot.forEach(doc => {
-        docs.push({id: doc.id, data: doc.data()})
-      })
-    })
-
-  docs = docs.filter((doc) => {
-    return !(doc.data.blacklisted || doc.data.status === 'deleted')
-  })
-
-  if (query) {
-    const match = new RegExp(query, 'i')
-    docs = docs.filter((doc) => {
-      return match.test(doc.data.name)
-    })
-  }
-
-  if (!(typeof featured === 'undefined')) {
+  if ((typeof featured === 'undefined')) {
+    featured = true
+  } else {
     if (featured === 'true') {
-      docs = docs.filter((doc) => doc.data.featured === true)
+      featured = true
     } else if (featured === 'false') {
-      docs = docs.filter((doc) => !doc.data.featured === true)
+      featured = false
     }
   }
-
-  switch (openSource) {
-    case 'any':
-      break
-    case 'true':
-      docs = docs.filter((doc) => doc.data.openSource)
-      break
-    case 'false':
-      docs = docs.filter((doc) => !doc.data.openSource)
-      break
-    default:
-      break
-  }
-
+  const response = await client.search({
+    index: 'projects',
+    body: {
+      query: {
+        bool: {
+          must: [{
+            bool: {
+              should: [{
+                match: {
+                  details: `${query}`
+                }
+              },
+              {
+                wildcard: {
+                  name: `*${query}*`
+                }
+              }]
+            }
+          },
+          {
+            match: {
+              blacklisted: false
+            }
+          },
+          {
+            match: {
+              openSource: openSource
+            }
+          },
+          {
+            match: {
+              featured: featured
+            }
+          }]
+        }
+      }
+    }
+  })
+  let docs = []
+  response.hits.hits.forEach((doc) => {
+    docs.push(doc._source)
+  })
   return docs
 }
